@@ -3,6 +3,7 @@ package com.TradeX.order.Service;
 import com.TradeX.order.Client.WalletClient;
 import com.TradeX.order.DTO.OrderRequest;
 import com.TradeX.order.Entity.Order;
+import com.TradeX.order.Kafka.OrderProducer;
 import com.TradeX.order.Repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,11 @@ import java.time.LocalDateTime;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final WalletClient walletClient;
+    private final OrderProducer orderProducer;
 
     public Order placeOrder(OrderRequest request) {
+
+
 
         // 🧠 Step 1: Calculate total cost
         double totalAmount = request.getPrice() * request.getQuantity();
@@ -34,6 +38,8 @@ public class OrderService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return orderRepository.save(order);
+        Order  savedorder  =orderRepository.save(order);
+        orderProducer.sendOrderEvent("Order Created: " + savedorder.getId());
+        return savedorder;
     }
 }
