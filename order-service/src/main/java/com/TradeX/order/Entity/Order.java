@@ -24,9 +24,11 @@ public class Order {
     private Double price;
     private Double quantity;
 
-    private Double filledQuantity;
+    @Column(nullable = false)
+    private Double filledQuantity = 0.0;
 
-    private String status; // OPEN, COMPLETED
+    @Column(nullable = false)
+    private String status; // OPEN, PARTIAL, COMPLETED
 
     private LocalDateTime createdAt;
 }

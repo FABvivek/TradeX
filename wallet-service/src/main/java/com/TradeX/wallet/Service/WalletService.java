@@ -17,6 +17,8 @@ public class WalletService {
                 .userId(userId)
                 .availableBalance(0.0)
                 .lockedBalance(0.0)
+                .btcBalance(0.0)
+                .btcLocked(0.0)
                 .build();
 
         return walletRepository.save(wallet);
@@ -73,6 +75,66 @@ public class WalletService {
 
         wallet.setLockedBalance(wallet.getLockedBalance() - amount);
 
+        return walletRepository.save(wallet);
+    }
+
+    @Transactional
+    public Wallet creditBalance(Long userId, Double amount) {
+
+        Wallet wallet = walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+        wallet.setAvailableBalance(wallet.getAvailableBalance() + amount);
+
+        return walletRepository.save(wallet);
+    }
+    @Transactional
+    public Wallet addBTC(Long userId, Double amount) {
+
+        Wallet wallet = walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+        wallet.setBtcBalance(wallet.getBtcBalance() + amount);
+
+        return walletRepository.save(wallet);
+    }
+
+    @Transactional
+    public Wallet lockBTC(Long userId, Double amount) {
+
+        Wallet wallet = walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+        if (wallet.getBtcBalance() < amount) {
+            throw new RuntimeException("Insufficient BTC");
+        }
+
+        wallet.setBtcBalance(wallet.getBtcBalance() - amount);
+        wallet.setBtcLocked(wallet.getBtcLocked() + amount);
+
+        return walletRepository.save(wallet);
+    }
+
+    @Transactional
+    public Wallet deductBTC(Long userId, Double amount) {
+
+        Wallet wallet = walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+        if (wallet.getBtcLocked() < amount) {
+            throw new RuntimeException("Insufficient locked BTC");
+        }
+
+        wallet.setBtcLocked(wallet.getBtcLocked() - amount);
+
+        return walletRepository.save(wallet);
+    }
+    @Transactional
+    public Wallet creditBTC(Long userId, Double amount) {
+        Wallet wallet = walletRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+
+        wallet.setBtcBalance(wallet.getBtcBalance() + amount);
         return walletRepository.save(wallet);
     }
 }

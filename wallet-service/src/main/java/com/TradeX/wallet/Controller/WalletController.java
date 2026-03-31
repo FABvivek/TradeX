@@ -43,4 +43,33 @@ public class WalletController {
                          @RequestParam Double amount) {
         return walletService.deductLockedBalance(userId, amount);
     }
+    @PostMapping("/credit/{userId}")
+    public Wallet credit(@PathVariable Long userId,
+                         @RequestParam Double amount) {
+        return walletService.addMoney(userId, amount);
+    }
+
+    @PostMapping("/btc/add/{userId}")
+    public Wallet addBTC(@PathVariable Long userId,
+                         @RequestParam Double amount) {
+        return walletService.addBTC(userId, amount);
+    }
+
+    @PostMapping("/btc/lock/{userId}")
+    public Wallet lockBTC(@PathVariable Long userId,
+                          @RequestParam Double amount) {
+        return walletService.lockBTC(userId, amount);
+    }
+
+    @PostMapping("/btc/deduct/{userId}")
+    public Wallet deductBTC(@PathVariable Long userId,
+                            @RequestParam Double amount) {
+        return walletService.deductBTC(userId, amount);
+    }
+
+    @PostMapping("/btc/credit/{userId}")
+    public Wallet creditBTC(@PathVariable Long userId,
+                            @RequestParam Double amount) {
+        return walletService.creditBTC(userId, amount);
+    }
 }

@@ -4,10 +4,7 @@ import com.TradeX.order.DTO.OrderRequest;
 import com.TradeX.order.Entity.Order;
 import com.TradeX.order.Service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
@@ -18,5 +15,11 @@ public class OrderController {
     @PostMapping("/place")
     public Order placeOrder(@RequestBody OrderRequest request) {
         return orderService.placeOrder(request);
+    }
+
+    @PostMapping("/update/{orderId}")
+    public Order updateOrder(@PathVariable Long orderId,
+                             @RequestParam Double qty) {
+        return orderService.updateOrder(orderId, qty);
     }
 }

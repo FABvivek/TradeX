@@ -20,4 +20,10 @@ public class Wallet {
     private Double availableBalance;
 
     private Double lockedBalance;
+
+    @Column(nullable = false)
+    private Double btcBalance = 0.0;
+
+    @Column(nullable = false)
+    private Double btcLocked = 0.0;
 }
